@@ -4,7 +4,26 @@ AI agent trên Zalo giúp **giáo viên chủ nhiệm (GVCN)** cập nhật hồ
 
 Đây là bài dự thi **AI Educamp 2026** (THPT FPT Hà Nội, chủ đề "Trường học số"). Kế hoạch dự thi: [plan/](plan/). Thể lệ và rubric: [info-request/](info-request/).
 
-> **Trạng thái (27/10/2026): bring-up xong, đang thử nghiệm với dữ liệu giả.** Bot chạy được trên Zalo, phân quyền theo người gửi đã hoạt động. Nhật ký chi tiết, quyết định đã chốt và việc còn dở nằm trong [STATUS.md](STATUS.md). **Người tiếp nhận nên đọc STATUS.md trước.**
+> **Trạng thái (27/10/2026): bring-up xong, đang thử nghiệm với dữ liệu giả.** Bot chạy được trên Zalo, phân quyền theo người gửi đã hoạt động. Hiện trạng chi tiết và việc tiếp theo: [STATUS.md](STATUS.md).
+
+## Bắt đầu từ đây (người và AI agent tiếp nhận dự án)
+
+Đọc theo thứ tự, mỗi file đều ngắn:
+
+1. **[STATUS.md](STATUS.md)**: hiện trạng từng hạng mục, **việc tiếp theo theo thứ tự ưu tiên** (mỗi việc có tiêu chí "xong"), quyết định đã chốt, mốc nộp bài 2/11.
+2. **[AGENTS.md](AGENTS.md)**: quy tắc bắt buộc khi làm việc trong repo (dữ liệu, bảo mật, phạm vi) và rubric cuộc thi. Claude Code đọc qua [CLAUDE.md](CLAUDE.md); Codex, Cursor và các agent khác đọc trực tiếp AGENTS.md.
+3. **README này**: kiến trúc, cài đặt, vận hành, và mục "Những điều đã biết" (đọc trước khi sửa OpenClaw hay plugin).
+4. Khi cần chi tiết: [data/schema.md](data/schema.md) (dữ liệu và quyền), [bot/KICH-BAN-THU.md](bot/KICH-BAN-THU.md) (cách kiểm thử), [report/kien-truc-he-thong.html](report/kien-truc-he-thong.html) (sơ đồ, mở bằng trình duyệt), [docs/nhat-ky-bring-up.md](docs/nhat-ky-bring-up.md) (vì sao có các quyết định), [zalo-doc/README.md](zalo-doc/README.md) (tài liệu Zalo Bot/OpenClaw lưu sẵn).
+
+Năm điều không được làm sai:
+
+- **Không commit dữ liệu thật** (tên, điểm, SĐT, Zalo ID của học sinh/phụ huynh) và không commit khoá. `.env`, `data/private/`, `bot/logs/`, `sample-input/` đã gitignore, giữ nguyên như vậy.
+- **Mọi thay đổi về quyền làm ở [bot/apps-script/Code.gs](bot/apps-script/Code.gs) hoặc plugin**, không chỉ ở lời dặn trong `bot/workspace/AGENTS.md`. Sửa Code.gs xong phải triển khai phiên bản mới trong Apps Script.
+- **Không mở thêm tool cho agent** ngoài 5 tool của plugin. Ai cũng nhắn được cho bot, nên agent có `exec`, file hay web là lỗ hổng.
+- **Không ghi dữ liệu khi chưa có xác nhận của GVCN** (luồng 2 bước của `gv_ghi`).
+- **Cập nhật STATUS.md** sau mỗi quyết định hoặc phát hiện mới; chi tiết dài thì đưa vào `docs/` hoặc `research/`.
+
+Máy của người tiếp nhận chưa có gì? Làm theo mục "Cài đặt từ đầu" bên dưới. Cần xin từ người bàn giao: quyền sửa file Google Sheets demo (hoặc tự tạo file mới từ `data/demo/`), Zalo Bot riêng (tự tạo được trong 2 phút), và các khoá model (tự đăng ký được).
 
 ## Bot làm được gì
 
@@ -53,7 +72,9 @@ Nguyên tắc bảo mật cốt lõi: **quyền được ép bằng code ở App
 | [data/demo/](data/demo/) | Dữ liệu giả lớp 12B1 (7 học sinh) dạng CSV |
 | [zalo-doc/](zalo-doc/) | Bản lưu tài liệu Zalo Bot Platform, kênh Zalo của OpenClaw và SDK. Đọc `zalo-doc/README.md` trước |
 | [research/](research/) | Ghi chú nghiên cứu: OpenClaw + Sheets, model AI miễn phí, nguồn API |
-| [STATUS.md](STATUS.md) | File trạng thái dự án: lịch sử, quyết định, việc còn dở |
+| [STATUS.md](STATUS.md) | File trạng thái dự án: hiện trạng, việc tiếp theo, quyết định đã chốt |
+| [docs/](docs/) | Nhật ký bring-up chi tiết theo thời gian (lịch sử, không phải trạng thái hiện tại) |
+| [report/](report/) | Báo cáo kỹ thuật dạng trang HTML tĩnh (`kien-truc-he-thong.html`): sơ đồ, trình tự một lượt hỏi, các lớp bảo mật, model đã thử. Tải về và mở bằng trình duyệt |
 | [AGENTS.md](AGENTS.md), [CLAUDE.md](CLAUDE.md), [.claude/agents/](.claude/agents/) | Hướng dẫn cho AI agent (Claude Code) làm việc trong repo này |
 
 Không có trong repo (đã `.gitignore`): `.env` (khoá), `data/private/` (SĐT thật của phụ huynh thử nghiệm), `bot/logs/` (log có Zalo ID).
@@ -168,13 +189,9 @@ Kiểm tra: `openclaw channels status --probe` phải thấy `Zalo default ... r
 - Gemini free: chỉ 20 lần gọi/ngày/model. Gói Google AI Pro không tăng hạn mức API.
 - Phương án dài hạn cần ngân sách nhỏ (FPT AI Marketplace, nạp vài USD Z.ai/DeepSeek/OpenRouter). Gói miễn phí có thể dùng dữ liệu để huấn luyện, nên **chỉ dùng dữ liệu giả** cho tới khi chuyển gói trả phí và có ý kiến của BGH.
 
-## Việc tiếp theo (ưu tiên)
+## Việc tiếp theo
 
-1. Chọn nguồn model ổn định cho tuần thí điểm với phụ huynh thật (xem STATUS.md, mục ngân sách).
-2. Chạy hết [bot/KICH-BAN-THU.md](bot/KICH-BAN-THU.md), sửa câu trả lời sai. Lọc bỏ Markdown ở tầng plugin nếu model vẫn chèn `**`.
-3. Lỗi model (429, quá tải) đang hiện nguyên văn tiếng Anh cho phụ huynh, cần thay bằng câu thân thiện.
-4. Chạy 24/7: máy chủ (VPS / máy của trường) + webhook thay cho polling.
-5. Mở rộng sau thi: nhập điểm qua link Sheets hoặc ảnh chụp, cảnh báo sớm khi điểm tụt, nhiều lớp.
+Danh sách ưu tiên kèm tiêu chí hoàn thành nằm ở [STATUS.md](STATUS.md#việc-tiếp-theo-theo-thứ-tự-ưu-tiên), giữ một nơi duy nhất để không lệch nhau. Tóm tắt: chốt nguồn model ổn định, chạy hết kịch bản thử, câu báo lỗi thân thiện, lọc Markdown, chuẩn bị thí điểm thật, hồ sơ nộp 2/11.
 
 ## Đóng góp
 

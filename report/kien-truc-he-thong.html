@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kiến trúc Trợ lý GVCN</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: một cột tài liệu kỹ thuật, căn trái, rộng tối đa ~1040px; sơ đồ và bảng cuộn ngang trong khung riêng. */
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --fg: #142033;
+  --muted: #586478;
+  --line: #d8dfe9;
+  --accent: #1d5fd1;      /* Zalo / luồng tin nhắn */
+  --data: #16794a;        /* Google Sheets / dữ liệu */
+  --model: #b0610a;       /* model AI */
+  --guard: #9b2c5a;       /* lớp bảo mật */
+  --code-bg: #eef2f7;
+  --font-display: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Be Vietnam Pro", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d121a; --surface: #141b26; --fg: #e5eaf2; --muted: #96a2b6; --line: #273243;
+    --accent: #6fa3ff; --data: #4cc28a; --model: #f0a54a; --guard: #e57aa6; --code-bg: #1a2331;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d121a; --surface: #141b26; --fg: #e5eaf2; --muted: #96a2b6; --line: #273243;
+  --accent: #6fa3ff; --data: #4cc28a; --model: #f0a54a; --guard: #e57aa6; --code-bg: #1a2331;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 15.5px/1.65 var(--font-body);
+}
+.page {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  gap: 56px;
+}
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.25; }
+h1 { font-size: clamp(1.9rem, 4.2vw, 2.6rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; font-weight: 700; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--accent); }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code, .mono { font-family: var(--font-mono); font-size: 0.88em; }
+code { background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+.eyebrow { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+.section { display: grid; gap: 18px; min-width: 0; }
+.section > header { display: grid; gap: 6px; }
+.lede { color: var(--muted); max-width: 70ch; }
+
+/* Đầu trang */
+.masthead { display: grid; gap: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.82rem; padding: 4px 10px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+}
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+.dot.ok { background: var(--data); }
+.dot.warn { background: var(--model); }
+
+/* Sơ đồ */
+.figure { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.figure svg { display: block; width: 100%; min-width: 760px; height: auto; }
+.figcap { font-size: 0.85rem; color: var(--muted); }
+svg text { font-family: var(--font-body); fill: var(--fg); }
+svg .sub { fill: var(--muted); font-size: 12px; }
+svg .mono { font-family: var(--font-mono); font-size: 11.5px; fill: var(--muted); }
+svg .box { fill: var(--surface); stroke: var(--line); stroke-width: 1.5; }
+svg .box.zalo { stroke: var(--accent); }
+svg .box.data { stroke: var(--data); }
+svg .box.model { stroke: var(--model); }
+svg .box.guard { stroke: var(--guard); stroke-width: 2; }
+svg .frame { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 5 4; }
+svg .flow { stroke: var(--accent); stroke-width: 2; fill: none; }
+svg .flow.data { stroke: var(--data); }
+svg .flow.model { stroke: var(--model); }
+svg .tag { font-size: 11px; font-weight: 600; }
+svg .tag.zalo { fill: var(--accent); }
+svg .tag.data { fill: var(--data); }
+svg .tag.model { fill: var(--model); }
+svg .tag.guard { fill: var(--guard); }
+svg .arrow-zalo { fill: var(--accent); }
+svg .arrow-data { fill: var(--data); }
+svg .arrow-model { fill: var(--model); }
+
+/* Trình tự một lượt hỏi */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: step; }
+.steps li {
+  counter-increment: step;
+  display: grid; grid-template-columns: 2.2rem 1fr auto; gap: 4px 14px; align-items: baseline;
+  padding: 12px 0; border-top: 1px solid var(--line);
+}
+.steps li:last-child { border-bottom: 1px solid var(--line); }
+.steps li::before {
+  content: counter(step);
+  font-family: var(--font-mono); font-weight: 500; color: var(--accent);
+  font-size: 0.95rem;
+}
+.steps .what { min-width: 0; }
+.steps .what strong { font-weight: 600; }
+.steps .where { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+.steps .note { grid-column: 2 / -1; color: var(--muted); font-size: 0.9rem; }
+
+/* Bảng */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; background: var(--code-bg); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.yes { color: var(--data); font-weight: 600; }
+.no { color: var(--muted); }
+.state { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; font-weight: 500; }
+
+/* Lớp bảo mật */
+.layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+.layer { border: 1px solid var(--line); border-left: 3px solid var(--guard); background: var(--surface); border-radius: 0 8px 8px 0; padding: 14px 16px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.layer .where { font-family: var(--font-mono); font-size: 0.76rem; color: var(--guard); }
+.layer p { font-size: 0.92rem; }
+
+/* Code */
+pre {
+  margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px 16px; overflow-x: auto; font: 400 0.84rem/1.6 var(--font-mono); color: var(--fg);
+}
+pre .c { color: var(--muted); }
+
+/* Danh sách bẫy */
+.pitfalls { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px 28px; }
+.pitfalls div { display: grid; gap: 4px; padding-top: 10px; border-top: 1px solid var(--line); min-width: 0; }
+.pitfalls h3 { font-size: 0.98rem; }
+.pitfalls p { font-size: 0.92rem; color: var(--muted); }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+.split > * { min-width: 0; }
+ol.next { margin: 0; padding-left: 1.3rem; display: grid; gap: 8px; max-width: 72ch; }
+footer.end { color: var(--muted); font-size: 0.85rem; border-top: 1px solid var(--line); padding-top: 16px; display: grid; gap: 4px; }
+
+@media (max-width: 560px) {
+  .page { gap: 44px; padding-block: 28px 48px; }
+  .steps li { grid-template-columns: 1.8rem 1fr; }
+  .steps .where { grid-column: 2; white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="masthead">
+    <span class="eyebrow">Báo cáo kỹ thuật · AI Educamp 2026 · THPT FPT Hà Nội</span>
+    <h1>Kiến trúc Trợ lý GVCN trên Zalo</h1>
+    <p class="lede">Một AI agent trên Zalo: GVCN cập nhật hồ sơ học sinh bằng tin nhắn, phụ huynh hỏi về đúng con mình bằng lời thường. Trang này mô tả hệ thống ở trạng thái <strong>bring-up ngày 27/10/2026</strong>, đang chạy với dữ liệu giả của lớp 12B1.</p>
+    <div class="chips" aria-label="Trạng thái hiện tại">
+      <span class="chip"><span class="dot ok"></span>Bot chạy được trên Zalo</span>
+      <span class="chip"><span class="dot ok"></span>Phân quyền theo người gửi đã kiểm</span>
+      <span class="chip"><span class="dot ok"></span>Model <code>zai/glm-4.5-flash</code> (miễn phí)</span>
+      <span class="chip"><span class="dot warn"></span>Chạy trên máy cá nhân, chưa 24/7</span>
+      <span class="chip"><span class="dot warn"></span>Chưa có nguồn model ổn định dài hạn</span>
+    </div>
+  </header>
+
+  <section class="section" id="kien-truc">
+    <header>
+      <span class="eyebrow">Tổng quan</span>
+      <h2>Các thành phần và luồng dữ liệu</h2>
+      <p class="lede">Năm khối, nối với nhau bằng HTTPS. Quyền truy cập được quyết định ở Apps Script dựa trên Zalo ID do OpenClaw cấp, không dựa vào việc AI làm đúng lời dặn.</p>
+    </header>
+    <div class="figure" role="img" aria-label="Sơ đồ: App Zalo nối Zalo Bot Platform, nối OpenClaw gateway gồm kênh zalo, agent main và plugin tro-ly-gvcn; agent gọi model AI; plugin gọi Apps Script web app, Apps Script đọc ghi Google Sheets.">
+      <svg viewBox="0 0 1000 440" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="a-zalo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrow-zalo"/></marker>
+          <marker id="a-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrow-data"/></marker>
+          <marker id="a-model" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="arrow-model"/></marker>
+        </defs>
+
+        <!-- Người dùng -->
+        <rect class="box zalo" x="20" y="60" width="170" height="86" rx="8"/>
+        <text x="36" y="88" font-weight="600" font-size="14">Phụ huynh / GVCN</text>
+        <text class="sub" x="36" y="108">App Zalo trên điện thoại</text>
+        <text class="mono" x="36" y="130">chat 1-1 với bot</text>
+
+        <!-- Zalo Bot Platform -->
+        <rect class="box zalo" x="236" y="60" width="190" height="86" rx="8"/>
+        <text x="252" y="88" font-weight="600" font-size="14">Zalo Bot Platform</text>
+        <text class="sub" x="252" y="108">Bot Creator, token bot</text>
+        <text class="mono" x="252" y="130">getUpdates · sendMessage</text>
+
+        <!-- OpenClaw khung -->
+        <rect class="frame" x="466" y="20" width="304" height="300" rx="10"/>
+        <text class="tag zalo" x="482" y="42">OPENCLAW GATEWAY · máy Windows · localhost:18789</text>
+
+        <rect class="box zalo" x="482" y="56" width="272" height="56" rx="7"/>
+        <text x="498" y="80" font-weight="600" font-size="13.5">Kênh zalo</text>
+        <text class="mono" x="498" y="100">@openclaw/zalo · polling · dmScope per-peer</text>
+
+        <rect class="box" x="482" y="126" width="272" height="66" rx="7"/>
+        <text x="498" y="150" font-weight="600" font-size="13.5">Agent main</text>
+        <text class="mono" x="498" y="170">bot/workspace/AGENTS.md</text>
+        <text class="mono" x="498" y="186">profile minimal + alsoAllow 5 tool</text>
+
+        <rect class="box guard" x="482" y="206" width="272" height="98" rx="7"/>
+        <text x="498" y="230" font-weight="600" font-size="13.5">Plugin tro-ly-gvcn</text>
+        <text class="mono" x="498" y="250">registerTool((ctx) =&gt; tool)</text>
+        <text class="mono" x="498" y="268">zalo_id = ctx.requesterSenderId</text>
+        <text class="tag guard" x="498" y="290">ID do OpenClaw cấp, AI không sửa được</text>
+
+        <!-- Model -->
+        <rect class="box model" x="482" y="352" width="272" height="72" rx="8"/>
+        <text x="498" y="376" font-weight="600" font-size="13.5">Model AI</text>
+        <text class="mono" x="498" y="396">zai/glm-4.5-flash</text>
+        <text class="mono" x="498" y="412">→ cerebras/qwen-3.8-27b → gemini lite</text>
+
+        <!-- Apps Script -->
+        <rect class="box guard" x="808" y="190" width="176" height="114" rx="8"/>
+        <text x="824" y="214" font-weight="600" font-size="13.5">Apps Script</text>
+        <text class="sub" x="824" y="233">web app trong file Sheets</text>
+        <text class="mono" x="824" y="254">kiểm SECRET</text>
+        <text class="mono" x="824" y="270">vai trò theo zalo_id</text>
+        <text class="mono" x="824" y="286">ghi 2 bước, NhatKy</text>
+
+        <!-- Sheets -->
+        <rect class="box data" x="808" y="352" width="176" height="72" rx="8"/>
+        <text x="824" y="376" font-weight="600" font-size="13.5">Google Sheets lớp</text>
+        <text class="mono" x="824" y="396">7 tab · data/schema.md</text>
+        <text class="sub" x="824" y="413">GVCN dán điểm từ Excel</text>
+
+        <!-- Mũi tên -->
+        <path class="flow" d="M190,103 L234,103" marker-end="url(#a-zalo)" marker-start="url(#a-zalo)"/>
+        <path class="flow" d="M426,96 L480,84" marker-end="url(#a-zalo)"/>
+        <path class="flow" d="M480,92 L428,110" marker-end="url(#a-zalo)"/>
+        <text class="tag zalo" x="330" y="168">tin đến / trả lời</text>
+        <path class="flow" d="M618,112 L618,124" marker-end="url(#a-zalo)"/>
+        <path class="flow" d="M618,192 L618,204" marker-end="url(#a-zalo)"/>
+        <path class="flow model" d="M754,160 C 790,160 790,388 756,388" marker-end="url(#a-model)"/>
+        <text class="tag model" x="560" y="342">~10–13k token/lượt gọi</text>
+        <path class="flow data" d="M754,250 L806,250" marker-end="url(#a-data)"/>
+        <text class="tag data" x="762" y="242">POST</text>
+        <path class="flow data" d="M896,304 L896,350" marker-end="url(#a-data)" marker-start="url(#a-data)"/>
+      </svg>
+    </div>
+    <p class="figcap">Màu viền: xanh dương là luồng tin nhắn Zalo, cam là model AI, xanh lá là dữ liệu, hồng là nơi kiểm soát quyền.</p>
+  </section>
+
+  <section class="section" id="trinh-tu">
+    <header>
+      <span class="eyebrow">Trình tự</span>
+      <h2>Một lượt phụ huynh hỏi "Điểm Tiếng Anh của con thế nào?"</h2>
+      <p class="lede">Đo trực tiếp với <code>glm-4.5-flash</code>: khoảng 3–5 giây từ lúc nhận tin đến lúc gửi trả lời, gồm 2 lần gọi model.</p>
+    </header>
+    <ol class="steps">
+      <li><span class="what"><strong>Zalo chuyển tin</strong> cho kênh zalo của OpenClaw qua long polling.</span><span class="where">getUpdates</span>
+        <span class="note">Payload có <code>message.from.id</code> (hex 20 ký tự). Tin gửi lúc gateway tắt bị mất, Zalo không giữ lại.</span></li>
+      <li><span class="what"><strong>OpenClaw mở phiên riêng</strong> cho người gửi này, làm mới sau 30 phút không nhắn.</span><span class="where">session.dmScope</span>
+        <span class="note">Mỗi phụ huynh có lịch sử riêng, không lẫn sang người khác.</span></li>
+      <li><span class="what"><strong>Lần gọi model thứ nhất:</strong> theo AGENTS.md, model gọi <code>vai_tro_cua_toi</code>.</span><span class="where">agent main</span></li>
+      <li><span class="what"><strong>Plugin gắn Zalo ID</strong> lấy từ <code>ctx.requesterSenderId</code> rồi POST sang Apps Script kèm khoá bí mật.</span><span class="where">plugin → Apps Script</span>
+        <span class="note">Không có ID hoặc tin không đến từ kênh Zalo thì plugin không tạo tool (fail closed).</span></li>
+      <li><span class="what"><strong>Apps Script xác định vai trò</strong> và, với phụ huynh, trả luôn hồ sơ của con: điểm, tổng hợp theo môn, hoạt động, sự kiện.</span><span class="where">Code.gs</span>
+        <span class="note">Ghi một dòng vào tab NhatKy để làm số liệu minh chứng.</span></li>
+      <li><span class="what"><strong>Lần gọi model thứ hai:</strong> soạn câu trả lời chỉ từ dữ liệu tool trả về.</span><span class="where">agent main</span></li>
+      <li><span class="what"><strong>Gửi trả lời</strong> về đúng cuộc chat qua Zalo Bot API.</span><span class="where">sendMessage</span>
+        <span class="note">Zalo hiển thị văn bản thuần, mỗi tin tối đa 2000 ký tự.</span></li>
+    </ol>
+  </section>
+
+  <section class="section" id="bao-mat">
+    <header>
+      <span class="eyebrow">Bảo mật</span>
+      <h2>Các lớp kiểm soát quyền</h2>
+      <p class="lede">Ai cũng nhắn được cho bot (<code>dmPolicy: open</code>), vì vậy mọi giới hạn phải nằm trong code. Lời dặn trong AGENTS.md chỉ để bot cư xử đúng mực, không phải là hàng rào bảo mật.</p>
+    </header>
+    <div class="layers">
+      <div class="layer"><span class="where">OpenClaw · agents.entries.main.tools</span><h3>Agent chỉ có 5 tool</h3><p>Không chạy lệnh, không đọc file, không lên web. <code>gateway</code> và <code>session_status</code> bị chặn hẳn.</p></div>
+      <div class="layer"><span class="where">Plugin · factory</span><h3>Danh tính do hệ thống cấp</h3><p>Zalo ID lấy từ ngữ cảnh lượt chat, không phải tham số AI điền. AI không giả danh người khác được.</p></div>
+      <div class="layer"><span class="where">Apps Script · SECRET</span><h3>Chỉ plugin gọi được</h3><p>Khoá lưu ở lần gọi đầu tiên. Sai khoá thì chỉ nhận thông báo lỗi.</p></div>
+      <div class="layer"><span class="where">Apps Script · role_()</span><h3>Phụ huynh chỉ thấy con mình</h3><p>Dữ liệu lọc theo <code>ma_hs</code> gắn với Zalo ID. Ghi dữ liệu chỉ dành cho GVCN.</p></div>
+      <div class="layer"><span class="where">Liên kết bằng SĐT</span><h3>Danh sách do GVCN lập</h3><p>SĐT phải có sẵn trong tab PhuHuynh. Sai 3 lần thì khoá. SĐT đã gắn Zalo khác thì từ chối và báo GVCN.</p></div>
+      <div class="layer"><span class="where">gv_ghi · 2 bước</span><h3>Ghi phải xác nhận</h3><p>Bản xem trước kèm mã hết hạn sau 10 phút. Plugin chặn xác nhận ngay trong cùng lượt, buộc chờ GVCN trả lời.</p></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Vai trò</th><th>Được đọc</th><th>Được ghi</th></tr></thead>
+        <tbody>
+          <tr><td>Chưa liên kết</td><td class="no">Không gì cả</td><td>Chỉ thao tác liên kết bằng SĐT</td></tr>
+          <tr><td>Phụ huynh</td><td>Hồ sơ của con: điểm học kỳ hiện tại, hoạt động, khen, nhắc nhở, vắng; lịch sự kiện</td><td class="no">Không</td></tr>
+          <tr><td>GVCN</td><td>Cả lớp, kèm tình trạng liên kết phụ huynh và thống kê sử dụng</td><td>Điểm, hoạt động, sự kiện (xem trước rồi xác nhận)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="cong-cu">
+    <header>
+      <span class="eyebrow">Plugin tro-ly-gvcn</span>
+      <h2>Năm tool của agent</h2>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tool</th><th>Ai dùng</th><th>Action ở Apps Script</th><th>Ghi chú</th></tr></thead>
+        <tbody>
+          <tr><td><code>vai_tro_cua_toi</code></td><td>Mọi người, đầu mỗi tin</td><td><code>vai_tro</code> (+ <code>tra_cuu_con</code>)</td><td>Gộp 2 bước để mỗi câu hỏi chỉ tốn 2 lần gọi model</td></tr>
+          <tr><td><code>lien_ket_phu_huynh</code></td><td>Chưa liên kết</td><td><code>lien_ket</code></td><td>Chuẩn hoá SĐT (bỏ khoảng trắng, +84 thành 0). GVCN cũng tự liên kết bằng <code>CauHinh.gvcn_sdt</code></td></tr>
+          <tr><td><code>tra_cuu_con</code></td><td>Phụ huynh</td><td><code>tra_cuu_con</code></td><td>Chỉ cần khi phụ huynh có nhiều con trong lớp</td></tr>
+          <tr><td><code>gv_xem_lop</code></td><td>GVCN</td><td><code>gv_xem_lop</code></td><td>Cả lớp hoặc một em, lọc theo ngày, kèm thống kê từ NhatKy</td></tr>
+          <tr><td><code>gv_ghi</code></td><td>GVCN</td><td><code>gv_ghi</code></td><td>Bảng Diem, HoatDong, SuKien. Thông báo cho GVCN do plugin gửi qua Zalo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="du-lieu">
+    <header>
+      <span class="eyebrow">Dữ liệu</span>
+      <h2>Một file Google Sheets cho mỗi lớp</h2>
+      <p class="lede">Điểm, hoạt động và nhật ký lưu dạng mỗi sự kiện một dòng, để bot ghi thêm đơn giản và lọc theo ngày dễ. <code>ma_hs</code> là khoá nối các tab. Dữ liệu demo: 7 học sinh giả, 141 điểm, 16 hoạt động, 4 sự kiện.</p>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tab</th><th>Cột chính</th><th>Ai ghi</th></tr></thead>
+        <tbody>
+          <tr><td><code>CauHinh</code></td><td>lop, nam_hoc, hoc_ky_hien_tai, gvcn_ten, gvcn_sdt, gvcn_zalo_id, xac_minh_ngay_sinh</td><td>GVCN; bot điền gvcn_zalo_id</td></tr>
+          <tr><td><code>HocSinh</code></td><td>ma_hs, ho_ten, lop, ngay_sinh, gioi_tinh, trang_thai, ghi_chu</td><td>GVCN</td></tr>
+          <tr><td><code>PhuHuynh</code></td><td>ma_hs, ten_phu_huynh, xung_ho, quan_he, sdt, zalo_id, ngay_lien_ket, trang_thai</td><td>GVCN lập; bot điền zalo_id</td></tr>
+          <tr><td><code>Diem</code></td><td>id, ma_hs, mon, loai (TX/GK/CK), hinh_thuc, diem, ngay, hoc_ky, nhan_xet</td><td>GVCN dán từ Excel hoặc ghi qua chat</td></tr>
+          <tr><td><code>HoatDong</code></td><td>id, ma_hs, ngay, loai (khen/nhac_nho/hoat_dong/vang), noi_dung</td><td>GVCN</td></tr>
+          <tr><td><code>SuKien</code></td><td>id, ngay, gio, tieu_de, mo_ta, pham_vi (lop/truong)</td><td>GVCN</td></tr>
+          <tr><td><code>NhatKy</code></td><td>thoi_gian, zalo_id, vai_tro, hanh_dong, ma_hs, chi_tiet</td><td>Bot, tự động</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Điểm trung bình môn tính theo Thông tư 22, không lưu sẵn: <span class="mono">ĐTB = (Σ TX + 2·GK + 3·CK) / (số bài TX + 5)</span>, chỉ tính khi đã đủ điểm giữa kỳ và cuối kỳ.</p>
+  </section>
+
+  <section class="section" id="model">
+    <header>
+      <span class="eyebrow">Model AI</span>
+      <h2>Các nguồn model đã thử</h2>
+      <p class="lede">Mỗi lần gọi model gửi khoảng 10–13 nghìn token (lời nhắc hệ thống của OpenClaw, định nghĩa tool, quy tắc của bot, lịch sử chat). Vì vậy giới hạn token mỗi phút quan trọng hơn số lần gọi mỗi ngày.</p>
+    </header>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Giá</th><th>Kết quả thực tế (27/10)</th><th>Trạng thái</th></tr></thead>
+        <tbody>
+          <tr><td><code>zai/glm-4.5-flash</code></td><td class="num">Miễn phí</td><td>3–5 giây/lượt có gọi tool, đúng số liệu 3/3 lần. Thỉnh thoảng chèn <code>**</code>. Z.ai đã báo sắp ngừng model này</td><td><span class="state"><span class="dot ok"></span>Đang dùng</span></td></tr>
+          <tr><td><code>cerebras/qwen-3.8-27b</code></td><td class="num">0,99 / 1,49 USD per 1M</td><td>1,5–2 giây/lần gọi, giới hạn rộng. Trước khi tối ưu, người dùng ghi nhận khoảng 0,1 USD/lượt hỏi</td><td><span class="state"><span class="dot warn"></span>Dự phòng, trừ credit</span></td></tr>
+          <tr><td><code>cerebras/gpt-oss-120b</code></td><td class="num">Hạn mức free</td><td>30k token/phút: một phiên dài là vượt, OpenClaw chờ 60 giây mỗi lần thử lại, người dùng chờ nhiều phút</td><td><span class="state"><span class="dot"></span>Bỏ</span></td></tr>
+          <tr><td><code>google/gemini-3.x-flash</code></td><td class="num">Free tier</td><td>Chỉ 20 lần gọi/ngày/model. Gói Google AI Pro không tăng hạn mức API</td><td><span class="state"><span class="dot"></span>Dự phòng cuối</span></td></tr>
+          <tr><td><code>zai/glm-4.7-flash</code></td><td class="num">Miễn phí</td><td>Quá tải (lỗi 1305), có lần 139 giây</td><td><span class="state"><span class="dot"></span>Bỏ</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figcap">Chi tiết và nguồn: <code>research/free-llm-providers.md</code>, <code>research/api-credit-programs.md</code>, nhật ký trong <code>STATUS.md</code>.</p>
+  </section>
+
+  <section class="section" id="cau-hinh">
+    <header>
+      <span class="eyebrow">Cấu hình</span>
+      <h2>Những thiết lập OpenClaw quan trọng</h2>
+      <p class="lede">Toàn bộ nằm trong <code>bot/openclaw-config.batch.json</code>, áp bằng <code>openclaw config set --batch-file</code>. Model đặt riêng bằng <code>openclaw models set</code>.</p>
+    </header>
+    <div class="split">
+<pre><span class="c">// agents.entries.main.tools</span>
+{
+  "profile": "minimal",
+  "alsoAllow": ["vai_tro_cua_toi", "lien_ket_phu_huynh",
+                "tra_cuu_con", "gv_xem_lop", "gv_ghi"],
+  "deny": ["gateway", "session_status"]
+}
+<span class="c">// tools.toolSearch: false
+// plugins.slots.memory: "none"
+// agents.defaults.thinkingDefault: "low"
+// agents.defaults.heartbeat.every: "0m"</span></pre>
+<pre><span class="c">// session</span>
+{
+  "dmScope": "per-channel-peer",
+  "resetByType": {
+    "direct": { "mode": "idle", "idleMinutes": 30 }
+  }
+}
+<span class="c">// channels.zalo.accounts.default
+//   botToken: SecretRef env ZALO_BOT_TOKEN
+//   dmPolicy: "open", allowFrom: ["*"]
+//   groupPolicy: "disabled"</span></pre>
+    </div>
+  </section>
+
+  <section class="section" id="bay">
+    <header>
+      <span class="eyebrow">Bài học khi bring-up</span>
+      <h2>Những chỗ dễ vấp</h2>
+    </header>
+    <div class="pitfalls">
+      <div><h3>Zalo Bot không nhận file</h3><p>Excel về dạng <code>message.unsupported.received</code>. Ảnh gửi thường thì nhận được. Vì vậy điểm cả lớp được dán thẳng vào Sheets.</p></div>
+      <div><h3>Zalo ID là hex, không có SĐT</h3><p>ID dạng chuỗi 20 ký tự. Bot API không trả số điện thoại, nên phụ huynh phải tự nhắn SĐT để liên kết.</p></div>
+      <div><h3><code>allow</code> và <code>profile</code></h3><p>Profile lọc trước <code>allow</code>, nên dùng <code>allow</code> thì agent không còn tool nào. Phải dùng <code>alsoAllow</code>.</p></div>
+      <div><h3>Sender ID chỉ có trong factory</h3><p><code>ctx.requesterSenderId</code> có trong hàm tạo tool, không có trong <code>execute</code>.</p></div>
+      <div><h3>Tool search tốn thêm một lượt</h3><p>Mặc định tool bị giấu sau bước tìm kiếm. Đặt <code>tools.toolSearch: false</code> để khai báo thẳng.</p></div>
+      <div><h3>Thử lại khi vượt hạn mức</h3><p>OpenClaw thử lại cùng model tối đa 10 lần rồi mới chuyển dự phòng, không cấu hình được. Giữ phiên ngắn, chọn model có giới hạn token/phút rộng.</p></div>
+      <div><h3><code>archive</code> không làm phiên ngắn lại</h3><p>Muốn bỏ lịch sử bị kẹt phải <code>openclaw sessions delete … --yes</code>, rồi khởi động lại gateway để huỷ lượt đang chạy.</p></div>
+      <div><h3>Model ngoài catalog</h3><p>Phải khai báo tay ở <code>models.providers.&lt;id&gt;.models</code>, nếu không runtime báo Unknown model.</p></div>
+      <div><h3>Định dạng Việt Nam trong Sheets</h3><p>Dán <code>6.75</code> thì thành chữ (Apps Script vẫn đọc đúng). SĐT phải để dạng chữ để giữ số 0 đầu.</p></div>
+    </div>
+  </section>
+
+  <section class="section" id="tiep-theo">
+    <header>
+      <span class="eyebrow">Bàn giao</span>
+      <h2>Việc tiếp theo</h2>
+    </header>
+    <ol class="next">
+      <li>Chọn nguồn model ổn định cho tuần thí điểm với phụ huynh thật: voucher FPT AI Marketplace, hoặc nạp vài USD cho Z.ai <code>glm-5.3-flash</code> (khoảng 0,01 USD/tin).</li>
+      <li>Chạy hết <code>bot/KICH-BAN-THU.md</code>, sửa các câu trả lời sai. Lọc Markdown ở tầng plugin nếu model vẫn chèn <code>**</code>.</li>
+      <li>Thay thông báo lỗi tiếng Anh của model (429, quá tải) bằng câu thân thiện cho phụ huynh.</li>
+      <li>Chạy 24/7 trên máy chủ, chuyển từ polling sang webhook.</li>
+      <li>Sau cuộc thi: nhập dữ liệu thật theo định dạng xuất của trường, cảnh báo sớm khi điểm tụt, mở rộng nhiều lớp.</li>
+    </ol>
+  </section>
+
+  <footer class="end">
+    <span>Mã nguồn: <a href="https://github.com/vupduv/tro-ly-gvcn-zalo">github.com/vupduv/tro-ly-gvcn-zalo</a> (private). Cài đặt từ đầu: <code>README.md</code>. Trạng thái và quyết định: <code>STATUS.md</code>.</span>
+    <span>Toàn bộ số liệu học sinh trên trang này là dữ liệu giả dùng để thử nghiệm.</span>
+  </footer>
+
+</main>
+</body>
+</html>

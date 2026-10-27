@@ -42,24 +42,27 @@ Quy định đáng chú ý (Phụ lục 2 của đề): sản phẩm do chính n
 | [info-request/](info-request/) | Thể lệ và rubric cuộc thi (PDF) | Chỉ đọc |
 | [plan/](plan/) | Kế hoạch dự thi (.md là bản chính; .docx có thêm 2 sơ đồ) | Sửa kế hoạch thì sửa file .md |
 | [zalo-doc/](zalo-doc/) | Bản lưu doc Zalo Bot Platform, kênh Zalo của OpenClaw và các SDK | **Đọc [zalo-doc/README.md](zalo-doc/README.md) trước**: có mục lục và các ràng buộc kỹ thuật |
-| [STATUS.md](STATUS.md) | **File trạng thái dự án**: đang làm gì, đã quyết gì, còn vướng gì | Cập nhật sau mỗi phiên |
+| [STATUS.md](STATUS.md) | **File trạng thái dự án**: hiện trạng, việc tiếp theo, quyết định đã chốt | Đọc đầu tiên. Cập nhật sau mỗi phiên |
+| [README.md](README.md) | Kiến trúc, cài đặt từ đầu, vận hành, những chỗ dễ vấp | Tài liệu bàn giao |
+| [bot/](bot/) | Plugin OpenClaw, Apps Script, cấu hình OpenClaw, workspace của bot, script, kịch bản thử | **Lưu ý:** `bot/workspace/AGENTS.md` là quy tắc của chính con bot Zalo (OpenClaw đọc), khác hẳn file bạn đang đọc |
+| [data/](data/) | `schema.md` (cấu trúc Sheets) và `demo/` (dữ liệu giả) | `data/private/` có SĐT thật, đã gitignore |
+| [research/](research/) | Ghi chú nghiên cứu, mỗi chủ đề một file, có nguồn | |
+| [docs/](docs/) | Nhật ký bring-up chi tiết (lịch sử, không phải trạng thái hiện tại) | |
+| [report/](report/) | Báo cáo kỹ thuật dạng HTML tĩnh | Cập nhật khi kiến trúc đổi |
 
-Các thư mục sẽ tạo khi cần (giữ đúng tên):
+Các thư mục sẽ tạo khi cần (giữ đúng tên): `submission/` (tóm tắt 250 từ, kịch bản video, hướng dẫn nhân rộng), `evidence/` (số liệu trước–sau, phản hồi phụ huynh, ảnh chụp đã che thông tin cá nhân).
 
-- `bot/`: cấu hình OpenClaw, workspace của agent, script phụ trợ. **Lưu ý:** OpenClaw cũng có file `AGENTS.md` riêng trong workspace của agent (persona, quy tắc của bot). File đó để trong `bot/workspace/` và khác hẳn file bạn đang đọc.
-- `data/samples/`: mẫu Google Sheets / Excel **đã ẩn danh**.
-- `research/`: ghi chú nghiên cứu bên ngoài, mỗi chủ đề một file, có ghi nguồn.
-- `submission/`: bản tóm tắt 250 từ, kịch bản video, hướng dẫn nhân rộng.
-- `evidence/`: số liệu trước–sau, phản hồi phụ huynh, ảnh chụp màn hình (đã che thông tin cá nhân).
+Không có trong repo, chỉ nằm trên máy bring-up: `.env`, `data/private/`, `bot/logs/`, `sample-input/` (file xuất thật của trường, có dữ liệu học sinh thật: **không bao giờ commit**).
 
-## Ràng buộc kỹ thuật đã xác minh (chi tiết trong zalo-doc/README.md)
+## Ràng buộc kỹ thuật đã kiểm chứng
 
-- Dùng **kênh `zalo` có sẵn của OpenClaw** với Bot Token tạo từ Zalo Bot Creator. **Không dùng My ClawBot** (`openclaw-zaloclawbot`), vì bot đó chỉ trò chuyện với chủ sở hữu.
-- Bot chỉ nhận được tin **chữ, ảnh, sticker, tin thoại**, **không nhận được file** (.xlsx). Cần phương án nhập điểm khác.
-- Mỗi tin nhắn tối đa 2000 ký tự. Định dạng chữ dùng `parse_mode: markdown|html`.
-- Phân quyền: OpenClaw dùng `dmPolicy: pairing` hoặc `allowlist` theo Zalo user ID (dạng số). Ánh xạ user ID ↔ học sinh phải tự làm.
-- Nhóm chat của Zalo Bot đang thử nghiệm nội bộ, nên **chỉ dùng chat 1-1**.
-- Polling và webhook không chạy cùng lúc. Demo trên máy cá nhân thì dùng polling.
+Danh sách đầy đủ ở README, mục "Những điều đã biết". Các điểm quan trọng nhất:
+
+- Dùng **kênh `zalo` chính thức của OpenClaw** (`@openclaw/zalo`) với Bot Token từ Zalo Bot Creator. Không dùng My ClawBot (chỉ chat với chủ sở hữu), không dùng plugin Zalo cộng đồng (tài khoản cá nhân).
+- Bot **không nhận được file** (.xlsx). Ảnh, chữ, sticker, tin thoại thì nhận được. Tin gửi lúc bot tắt bị mất.
+- Zalo user ID là **chuỗi hex 20 ký tự**. Bot API không trả SĐT người nhắn. Zalo hiển thị văn bản thuần (không Markdown), tối đa 2000 ký tự/tin.
+- Chỉ dùng chat 1-1 (nhóm chat của Zalo Bot còn thử nghiệm nội bộ).
+- **Quyền được ép ở Apps Script** theo `ctx.requesterSenderId`. Tool của plugin phải đăng ký dạng factory. Agent dùng `profile: minimal` + `alsoAllow`, không dùng `allow`.
 
 ## Quy tắc dữ liệu và an toàn (bắt buộc)
 
