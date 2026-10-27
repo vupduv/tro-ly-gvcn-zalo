@@ -1,0 +1,18 @@
+[
+  {"path":"secrets.providers.default","provider":{"source":"env"}},
+  {"path":"agents.defaults.heartbeat.every","value":"0m"},
+  {"path":"tools.profile","value":"minimal"},
+  {"path":"agents.entries.main.tools","value":{"profile":"minimal","alsoAllow":["vai_tro_cua_toi","lien_ket_phu_huynh","tra_cuu_con","gv_xem_lop","gv_ghi"],"deny":["gateway","session_status"]}},
+  {"path":"session.dmScope","value":"per-channel-peer"},
+  {"path":"channels.zalo.enabled","value":true},
+  {"path":"channels.zalo.accounts.default.name","value":"Bot Củ Cải (test)"},
+  {"path":"channels.zalo.accounts.default.botToken","ref":{"source":"env","provider":"default","id":"ZALO_BOT_TOKEN"}},
+  {"path":"channels.zalo.accounts.default.dmPolicy","value":"open"},
+  {"path":"channels.zalo.accounts.default.allowFrom","value":["*"]},
+  {"path":"channels.zalo.accounts.default.groupPolicy","value":"disabled"},
+  {"path":"plugins.entries.memory-core.config.dreaming.enabled","value":false},
+  {"path":"session.resetByType.direct","value":{"mode":"idle","idleMinutes":30}},
+  {"path":"tools.toolSearch","value":false},
+  {"path":"agents.defaults.thinkingDefault","value":"low"},
+  {"path":"plugins.slots.memory","value":"none"}
+]

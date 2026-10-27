@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+data/private/
+bot/logs/
+node_modules/
+sample-input/
+.vscode/

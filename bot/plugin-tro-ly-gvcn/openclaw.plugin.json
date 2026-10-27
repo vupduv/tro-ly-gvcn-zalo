@@ -1,0 +1,20 @@
+{
+  "id": "tro-ly-gvcn",
+  "name": "Trợ lý GVCN",
+  "description": "Tra cứu và cập nhật hồ sơ học sinh (Google Sheets) qua Zalo, có phân quyền theo người gửi",
+  "categories": ["other"],
+  "contracts": {
+    "tools": ["vai_tro_cua_toi", "lien_ket_phu_huynh", "tra_cuu_con", "gv_xem_lop", "gv_ghi"]
+  },
+  "activation": {
+    "onStartup": true
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "appsScriptUrl": { "type": "string" },
+      "secret": { "type": "string" }
+    }
+  }
+}

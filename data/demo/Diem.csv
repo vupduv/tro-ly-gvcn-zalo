@@ -1,0 +1,142 @@
+﻿id,ma_hs,mon,loai,hinh_thuc,diem,ngay,hoc_ky,nhan_xet,nguoi_ghi,thoi_gian_ghi
+D0001,HS01,Toán,TX,Miệng,9.75,2026-09-15,HK1,,nhap_excel,2026-09-15 14:43
+D0002,HS01,Vật lí,TX,Miệng,7.25,2026-09-15,HK1,,nhap_excel,2026-09-15 15:35
+D0003,HS01,Hóa học,TX,Miệng,9.25,2026-09-15,HK1,,nhap_excel,2026-09-15 16:01
+D0004,HS01,Lịch sử,TX,Miệng,9.25,2026-09-15,HK1,,nhap_excel,2026-09-15 15:07
+D0005,HS02,Ngữ văn,TX,Miệng,8.75,2026-09-15,HK1,,nhap_excel,2026-09-15 14:00
+D0006,HS02,Tiếng Anh,TX,Miệng,8,2026-09-15,HK1,,nhap_excel,2026-09-15 14:47
+D0007,HS02,Vật lí,TX,Miệng,7.25,2026-09-15,HK1,,nhap_excel,2026-09-15 15:05
+D0008,HS02,Hóa học,TX,Miệng,7.25,2026-09-15,HK1,,nhap_excel,2026-09-15 15:19
+D0009,HS02,Lịch sử,TX,Miệng,6.25,2026-09-15,HK1,,nhap_excel,2026-09-15 15:48
+D0010,HS03,Toán,TX,Miệng,8,2026-09-15,HK1,,nhap_excel,2026-09-15 16:09
+D0011,HS03,Ngữ văn,TX,Miệng,7.75,2026-09-15,HK1,,nhap_excel,2026-09-15 16:26
+D0012,HS03,Vật lí,TX,Miệng,8.25,2026-09-15,HK1,,nhap_excel,2026-09-15 14:15
+D0013,HS03,Lịch sử,TX,Miệng,7,2026-09-15,HK1,,nhap_excel,2026-09-15 16:21
+D0014,HS04,Ngữ văn,TX,Miệng,6,2026-09-15,HK1,,nhap_excel,2026-09-15 14:18
+D0015,HS04,Tiếng Anh,TX,Miệng,5.5,2026-09-15,HK1,,nhap_excel,2026-09-15 16:37
+D0016,HS04,Vật lí,TX,Miệng,6,2026-09-15,HK1,,nhap_excel,2026-09-15 16:59
+D0017,HS04,Hóa học,TX,Miệng,6.25,2026-09-15,HK1,,nhap_excel,2026-09-15 14:32
+D0018,HS04,Lịch sử,TX,Miệng,7.75,2026-09-15,HK1,,nhap_excel,2026-09-15 15:46
+D0019,HS05,Tiếng Anh,TX,Miệng,7.75,2026-09-15,HK1,,nhap_excel,2026-09-15 15:40
+D0020,HS05,Lịch sử,TX,Miệng,7.5,2026-09-15,HK1,,nhap_excel,2026-09-15 15:08
+D0021,HS01,Ngữ văn,TX,15 phút,7.75,2026-09-29,HK1,,nhap_excel,2026-09-29 15:36
+D0022,HS01,Tiếng Anh,TX,15 phút,8.25,2026-09-29,HK1,,nhap_excel,2026-09-29 16:33
+D0023,HS01,Vật lí,TX,15 phút,8.75,2026-09-29,HK1,,nhap_excel,2026-09-29 14:09
+D0024,HS01,Hóa học,TX,15 phút,9.25,2026-09-29,HK1,,nhap_excel,2026-09-29 15:19
+D0025,HS01,Lịch sử,TX,15 phút,8.5,2026-09-29,HK1,,nhap_excel,2026-09-29 16:02
+D0026,HS02,Toán,TX,15 phút,7,2026-09-29,HK1,,nhap_excel,2026-09-29 15:07
+D0027,HS02,Ngữ văn,TX,15 phút,8.5,2026-09-29,HK1,,nhap_excel,2026-09-29 14:14
+D0028,HS02,Tiếng Anh,TX,15 phút,8,2026-09-29,HK1,,nhap_excel,2026-09-29 14:37
+D0029,HS02,Hóa học,TX,15 phút,6.75,2026-09-29,HK1,,nhap_excel,2026-09-29 16:09
+D0030,HS03,Ngữ văn,TX,15 phút,8,2026-09-29,HK1,,nhap_excel,2026-09-29 16:18
+D0031,HS03,Tiếng Anh,TX,15 phút,9.25,2026-09-29,HK1,,nhap_excel,2026-09-29 15:23
+D0032,HS03,Vật lí,TX,15 phút,7.75,2026-09-29,HK1,,nhap_excel,2026-09-29 14:12
+D0033,HS03,Lịch sử,TX,15 phút,8,2026-09-29,HK1,,nhap_excel,2026-09-29 14:20
+D0034,HS04,Toán,TX,15 phút,6.25,2026-09-29,HK1,,nhap_excel,2026-09-29 16:41
+D0035,HS04,Ngữ văn,TX,15 phút,6.75,2026-09-29,HK1,,nhap_excel,2026-09-29 15:25
+D0036,HS04,Vật lí,TX,15 phút,6.75,2026-09-29,HK1,,nhap_excel,2026-09-29 15:33
+D0037,HS05,Ngữ văn,TX,15 phút,6.5,2026-09-29,HK1,,nhap_excel,2026-09-29 15:43
+D0038,HS05,Tiếng Anh,TX,15 phút,6.75,2026-09-29,HK1,,nhap_excel,2026-09-29 14:44
+D0039,HS05,Hóa học,TX,15 phút,7.25,2026-09-29,HK1,,nhap_excel,2026-09-29 14:28
+D0040,HS05,Lịch sử,TX,15 phút,8,2026-09-29,HK1,,nhap_excel,2026-09-29 15:08
+D0041,HS01,Toán,TX,Miệng,9.5,2026-10-08,HK1,,nhap_excel,2026-10-08 15:15
+D0042,HS01,Ngữ văn,TX,Miệng,7.5,2026-10-08,HK1,,nhap_excel,2026-10-08 16:49
+D0043,HS01,Vật lí,TX,Miệng,8.5,2026-10-08,HK1,,nhap_excel,2026-10-08 16:59
+D0044,HS02,Toán,TX,Miệng,7,2026-10-08,HK1,,nhap_excel,2026-10-08 15:40
+D0045,HS02,Tiếng Anh,TX,Miệng,7.75,2026-10-08,HK1,,nhap_excel,2026-10-08 14:46
+D0046,HS02,Vật lí,TX,Miệng,7.5,2026-10-08,HK1,,nhap_excel,2026-10-08 16:14
+D0047,HS02,Lịch sử,TX,Miệng,8.25,2026-10-08,HK1,,nhap_excel,2026-10-08 15:27
+D0048,HS03,Toán,TX,Miệng,8.75,2026-10-08,HK1,,nhap_excel,2026-10-08 14:16
+D0049,HS03,Ngữ văn,TX,Miệng,8.25,2026-10-08,HK1,,nhap_excel,2026-10-08 16:05
+D0050,HS03,Tiếng Anh,TX,Miệng,9,2026-10-08,HK1,,nhap_excel,2026-10-08 15:31
+D0051,HS03,Vật lí,TX,Miệng,8.75,2026-10-08,HK1,,nhap_excel,2026-10-08 16:06
+D0052,HS03,Hóa học,TX,Miệng,8.25,2026-10-08,HK1,,nhap_excel,2026-10-08 16:11
+D0053,HS04,Toán,TX,Miệng,7,2026-10-08,HK1,,nhap_excel,2026-10-08 14:13
+D0054,HS04,Ngữ văn,TX,Miệng,6.25,2026-10-08,HK1,,nhap_excel,2026-10-08 15:54
+D0055,HS04,Tiếng Anh,TX,Miệng,7.25,2026-10-08,HK1,,nhap_excel,2026-10-08 14:50
+D0056,HS04,Vật lí,TX,Miệng,7.25,2026-10-08,HK1,,nhap_excel,2026-10-08 16:29
+D0057,HS04,Hóa học,TX,Miệng,6,2026-10-08,HK1,,nhap_excel,2026-10-08 16:16
+D0058,HS05,Toán,TX,Miệng,7.5,2026-10-08,HK1,,nhap_excel,2026-10-08 16:25
+D0059,HS05,Ngữ văn,TX,Miệng,6,2026-10-08,HK1,,nhap_excel,2026-10-08 16:49
+D0060,HS05,Tiếng Anh,TX,Miệng,7.75,2026-10-08,HK1,,nhap_excel,2026-10-08 16:53
+D0061,HS05,Vật lí,TX,Miệng,7.25,2026-10-08,HK1,,nhap_excel,2026-10-08 15:50
+D0062,HS05,Hóa học,TX,Miệng,7.25,2026-10-08,HK1,,nhap_excel,2026-10-08 16:07
+D0063,HS05,Lịch sử,TX,Miệng,6.75,2026-10-08,HK1,,nhap_excel,2026-10-08 16:56
+D0064,HS01,Ngữ văn,TX,15 phút,8.5,2026-10-20,HK1,,nhap_excel,2026-10-20 14:05
+D0065,HS01,Hóa học,TX,15 phút,7.5,2026-10-20,HK1,,nhap_excel,2026-10-20 16:10
+D0066,HS01,Lịch sử,TX,15 phút,8.25,2026-10-20,HK1,,nhap_excel,2026-10-20 15:49
+D0067,HS02,Toán,TX,15 phút,5.75,2026-10-20,HK1,"Chưa nắm chắc phần đạo hàm, cần ôn lại",nhap_excel,2026-10-20 15:33
+D0068,HS02,Ngữ văn,TX,15 phút,8,2026-10-20,HK1,,nhap_excel,2026-10-20 14:10
+D0069,HS02,Vật lí,TX,15 phút,7.75,2026-10-20,HK1,,nhap_excel,2026-10-20 14:39
+D0070,HS03,Toán,TX,15 phút,7.5,2026-10-20,HK1,,nhap_excel,2026-10-20 16:45
+D0071,HS03,Tiếng Anh,TX,15 phút,10,2026-10-20,HK1,,nhap_excel,2026-10-20 16:30
+D0072,HS03,Hóa học,TX,15 phút,7.5,2026-10-20,HK1,,nhap_excel,2026-10-20 16:26
+D0073,HS04,Toán,TX,15 phút,7.5,2026-10-20,HK1,Tiến bộ rõ so với đầu kỳ,nhap_excel,2026-10-20 15:14
+D0074,HS04,Ngữ văn,TX,15 phút,7.25,2026-10-20,HK1,Tiến bộ rõ so với đầu kỳ,nhap_excel,2026-10-20 14:34
+D0075,HS04,Tiếng Anh,TX,15 phút,7.25,2026-10-20,HK1,,nhap_excel,2026-10-20 16:20
+D0076,HS04,Vật lí,TX,15 phút,8,2026-10-20,HK1,Tiến bộ rõ so với đầu kỳ,nhap_excel,2026-10-20 15:43
+D0077,HS04,Hóa học,TX,15 phút,6.75,2026-10-20,HK1,,nhap_excel,2026-10-20 14:13
+D0078,HS04,Lịch sử,TX,15 phút,8,2026-10-20,HK1,,nhap_excel,2026-10-20 14:07
+D0079,HS05,Toán,TX,15 phút,6.25,2026-10-20,HK1,,nhap_excel,2026-10-20 16:42
+D0080,HS05,Ngữ văn,TX,15 phút,6.75,2026-10-20,HK1,,nhap_excel,2026-10-20 14:38
+D0081,HS05,Tiếng Anh,TX,15 phút,7.5,2026-10-20,HK1,,nhap_excel,2026-10-20 14:28
+D0082,HS05,Lịch sử,TX,15 phút,6.75,2026-10-20,HK1,,nhap_excel,2026-10-20 15:39
+D0083,HS01,Toán,TX,Miệng,10,2026-10-26,HK1,,nhap_excel,2026-10-26 16:46
+D0084,HS01,Ngữ văn,TX,Miệng,8.5,2026-10-26,HK1,,nhap_excel,2026-10-26 15:36
+D0085,HS01,Tiếng Anh,TX,Miệng,8.5,2026-10-26,HK1,,nhap_excel,2026-10-26 15:15
+D0086,HS01,Vật lí,TX,Miệng,8,2026-10-26,HK1,,nhap_excel,2026-10-26 15:41
+D0087,HS02,Toán,TX,Miệng,7,2026-10-26,HK1,"Chưa nắm chắc phần đạo hàm, cần ôn lại",nhap_excel,2026-10-26 16:11
+D0088,HS02,Ngữ văn,TX,Miệng,8.75,2026-10-26,HK1,,nhap_excel,2026-10-26 14:13
+D0089,HS02,Tiếng Anh,TX,Miệng,8,2026-10-26,HK1,,nhap_excel,2026-10-26 15:05
+D0090,HS02,Vật lí,TX,Miệng,6.25,2026-10-26,HK1,,nhap_excel,2026-10-26 15:00
+D0091,HS02,Hóa học,TX,Miệng,7.5,2026-10-26,HK1,,nhap_excel,2026-10-26 16:24
+D0092,HS03,Toán,TX,Miệng,8.75,2026-10-26,HK1,,nhap_excel,2026-10-26 15:39
+D0093,HS03,Ngữ văn,TX,Miệng,9,2026-10-26,HK1,,nhap_excel,2026-10-26 14:11
+D0094,HS03,Tiếng Anh,TX,Miệng,9.25,2026-10-26,HK1,,nhap_excel,2026-10-26 15:57
+D0095,HS03,Vật lí,TX,Miệng,8,2026-10-26,HK1,,nhap_excel,2026-10-26 16:40
+D0096,HS03,Hóa học,TX,Miệng,7.75,2026-10-26,HK1,,nhap_excel,2026-10-26 16:19
+D0097,HS03,Lịch sử,TX,Miệng,7.5,2026-10-26,HK1,,nhap_excel,2026-10-26 14:01
+D0098,HS04,Tiếng Anh,TX,Miệng,6.5,2026-10-26,HK1,,nhap_excel,2026-10-26 14:25
+D0099,HS04,Hóa học,TX,Miệng,7.75,2026-10-26,HK1,Tiến bộ rõ so với đầu kỳ,nhap_excel,2026-10-26 15:30
+D0100,HS04,Lịch sử,TX,Miệng,7.25,2026-10-26,HK1,Tiến bộ rõ so với đầu kỳ,nhap_excel,2026-10-26 14:36
+D0101,HS05,Toán,TX,Miệng,6.75,2026-10-26,HK1,,nhap_excel,2026-10-26 16:32
+D0102,HS05,Ngữ văn,TX,Miệng,8,2026-10-26,HK1,,nhap_excel,2026-10-26 14:56
+D0103,HS05,Vật lí,TX,Miệng,7.5,2026-10-26,HK1,,nhap_excel,2026-10-26 15:44
+D0104,HS05,Hóa học,TX,Miệng,9,2026-10-26,HK1,,nhap_excel,2026-10-26 15:42
+D0105,HS06,Toán,TX,Miệng,7.75,2026-09-15,HK1,,nhap_excel,2026-09-15 16:18
+D0106,HS06,Toán,TX,Miệng,8,2026-10-08,HK1,,nhap_excel,2026-10-08 15:22
+D0107,HS06,Toán,TX,15 phút,7.25,2026-10-20,HK1,,nhap_excel,2026-10-20 15:38
+D0108,HS06,Toán,TX,Miệng,7,2026-10-26,HK1,,nhap_excel,2026-10-26 15:46
+D0109,HS06,Ngữ văn,TX,Miệng,7.5,2026-09-15,HK1,,nhap_excel,2026-09-15 14:02
+D0110,HS06,Ngữ văn,TX,Miệng,7,2026-10-26,HK1,,nhap_excel,2026-10-26 15:36
+D0111,HS06,Tiếng Anh,TX,15 phút,8,2026-09-29,HK1,,nhap_excel,2026-09-29 16:49
+D0112,HS06,Tiếng Anh,TX,Miệng,7.75,2026-10-08,HK1,,nhap_excel,2026-10-08 15:20
+D0113,HS06,Tiếng Anh,TX,Miệng,8.25,2026-10-26,HK1,,nhap_excel,2026-10-26 16:35
+D0114,HS06,Vật lí,TX,Miệng,8.25,2026-09-15,HK1,,nhap_excel,2026-09-15 16:49
+D0115,HS06,Vật lí,TX,Miệng,8.75,2026-10-08,HK1,,nhap_excel,2026-10-08 15:24
+D0116,HS06,Vật lí,TX,15 phút,9.25,2026-10-20,HK1,,nhap_excel,2026-10-20 15:29
+D0117,HS06,Vật lí,TX,Miệng,9.5,2026-10-26,HK1,,nhap_excel,2026-10-26 15:06
+D0118,HS06,Hóa học,TX,Miệng,7,2026-09-15,HK1,,nhap_excel,2026-09-15 16:01
+D0119,HS06,Hóa học,TX,15 phút,7.75,2026-09-29,HK1,,nhap_excel,2026-09-29 16:25
+D0120,HS06,Hóa học,TX,15 phút,8.25,2026-10-20,HK1,,nhap_excel,2026-10-20 15:33
+D0121,HS06,Hóa học,TX,Miệng,7.5,2026-10-26,HK1,,nhap_excel,2026-10-26 14:16
+D0122,HS06,Lịch sử,TX,15 phút,8.25,2026-09-29,HK1,,nhap_excel,2026-09-29 15:37
+D0123,HS06,Lịch sử,TX,Miệng,7.5,2026-10-08,HK1,,nhap_excel,2026-10-08 16:38
+D0124,HS07,Toán,TX,Miệng,8,2026-09-15,HK1,,nhap_excel,2026-09-15 14:10
+D0125,HS07,Toán,TX,15 phút,6.5,2026-09-29,HK1,,nhap_excel,2026-09-29 16:05
+D0126,HS07,Toán,TX,Miệng,8,2026-10-08,HK1,,nhap_excel,2026-10-08 16:28
+D0127,HS07,Toán,TX,15 phút,6.5,2026-10-20,HK1,,nhap_excel,2026-10-20 16:08
+D0128,HS07,Ngữ văn,TX,15 phút,9,2026-09-29,HK1,,nhap_excel,2026-09-29 14:59
+D0129,HS07,Ngữ văn,TX,Miệng,8.75,2026-10-08,HK1,,nhap_excel,2026-10-08 15:29
+D0130,HS07,Tiếng Anh,TX,Miệng,6.75,2026-09-15,HK1,,nhap_excel,2026-09-15 14:48
+D0131,HS07,Tiếng Anh,TX,15 phút,5.75,2026-09-29,HK1,,nhap_excel,2026-09-29 14:13
+D0132,HS07,Tiếng Anh,TX,15 phút,5.25,2026-10-20,HK1,"Còn nhầm thì của động từ, cần luyện thêm",nhap_excel,2026-10-20 16:04
+D0133,HS07,Tiếng Anh,TX,Miệng,5.5,2026-10-26,HK1,"Còn nhầm thì của động từ, cần luyện thêm",nhap_excel,2026-10-26 15:49
+D0134,HS07,Vật lí,TX,Miệng,7.75,2026-09-15,HK1,,nhap_excel,2026-09-15 16:48
+D0135,HS07,Vật lí,TX,15 phút,6.75,2026-09-29,HK1,,nhap_excel,2026-09-29 16:28
+D0136,HS07,Vật lí,TX,Miệng,8,2026-10-08,HK1,,nhap_excel,2026-10-08 16:22
+D0137,HS07,Hóa học,TX,Miệng,6.5,2026-09-15,HK1,,nhap_excel,2026-09-15 15:08
+D0138,HS07,Hóa học,TX,15 phút,8,2026-09-29,HK1,,nhap_excel,2026-09-29 15:41
+D0139,HS07,Hóa học,TX,Miệng,7.75,2026-10-26,HK1,,nhap_excel,2026-10-26 16:38
+D0140,HS07,Lịch sử,TX,15 phút,6.75,2026-09-29,HK1,,nhap_excel,2026-09-29 16:23
+D0141,HS07,Lịch sử,TX,15 phút,7,2026-10-20,HK1,,nhap_excel,2026-10-20 16:23
